@@ -22,9 +22,9 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
     public PatnactkaRocnikovka() {
         initComponents();
     }
-    int counter;
+    int counter = 1;
 
-    void Empty(JButton button1, JButton button2) {
+    void Move(JButton button1, JButton button2) {
         String shuffle = button2.getText();
         if (shuffle == "") {
             button2.setText(button1.getText());
@@ -33,7 +33,84 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         }
     }
 
-  
+    public void RandomShuffle() {
+        int[][] puzzle = new int[4][4];
+        do {
+            Random rand = new Random();
+            int min = 0;
+            int max = 15;
+            int nCislo = rand.nextInt((max - min) + 1) + min;
+        } while (!isSolvable(puzzle));
+        buttonOne.setText(Integer.toString(puzzle[1][1]));
+        buttonTwo.setText(Integer.toString(puzzle[1][2]));
+        buttonThree.setText(Integer.toString(puzzle[1][3]));
+        buttonFour.setText(Integer.toString(puzzle[1][4]));
+        buttonFive.setText(Integer.toString(puzzle[2][1]));
+        buttonSix.setText(Integer.toString(puzzle[2][2]));
+        buttonSeven.setText(Integer.toString(puzzle[2][3]));
+        buttonEight.setText(Integer.toString(puzzle[2][4]));
+        buttonNine.setText(Integer.toString(puzzle[3][1]));
+        buttonTen.setText(Integer.toString(puzzle[3][2]));
+        buttonEleven.setText(Integer.toString(puzzle[3][3]));
+        buttonTwelve.setText(Integer.toString(puzzle[3][4]));
+        buttonThirteen.setText(Integer.toString(puzzle[4][1]));
+        buttonFourteen.setText(Integer.toString(puzzle[4][2]));
+        buttonFifteen.setText(Integer.toString(puzzle[4][3]));
+        clearButton.setText(Integer.toString(puzzle[4][4]));
+
+    }
+
+    static int getInvCount(int[] arr) {
+        int inv_count = 0;
+        for (int i = 0; i < 15; i++) {
+            for (int j = i + 1; j < 16; j++) {
+
+                // počítá dvojice (arr[i], arr[j]) tak aby
+                // i < j ale arr[i] > arr[j]
+                if (arr[j] > 0 && arr[i] > 0 && arr[i] > arr[j]) {
+                    inv_count++;
+                }
+            }
+        }
+        return inv_count;
+    }
+
+    static int findXPosition(int[][] puzzle) {
+        // hledá pozici volného čtverce
+        //začíná ze spodního pravého rohu pole
+        for (int i = 4 - 1; i >= 0; i--) {
+            for (int j = 4 - 1; j >= 0; j--) {
+                if (puzzle[i][j] == 0) {
+                    return 4 - i;
+                }
+            }
+        }
+        return 0;
+
+    }
+
+    static boolean isSolvable(int[][] puzzle) {
+        // Tato funkce vrací true pokud
+        // je tato kombinace řešitelná
+        int[] flat = new int[16];
+        int c = 0;
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                flat[c] = puzzle[x][y];
+                c++;
+            }
+        }
+
+        int invCount = getInvCount(flat);
+
+        int pos = findXPosition(puzzle);
+        if ((pos & 1) == 1) {
+            return !((invCount & 1) == 1);
+        } else {
+            return (invCount & 1) == 1;
+        }
+    }
+
     public void Solution() {
         String solution = buttonOne.getText();
         String solution1 = buttonTwo.getText();
@@ -54,14 +131,13 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         if (solution == "1" && solution1 == "2" && solution2 == "3" && solution3 == "4" && solution4 == "5" && solution5 == "6" && solution6 == "7"
                 && solution7 == "8" && solution8 == "9" && solution9 == "10" && solution10 == "11" && solution11 == "12" && solution12 == "13"
                 && solution13 == "14" && solution14 == "15") {
-            JOptionPane.showMessageDialog(this, "Vyhrál jsi!", "Patnáctku", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vyhrál jsi!", "Patnáctka", JOptionPane.INFORMATION_MESSAGE);
 
         }
-        counter++;
-        kliky.setText(Integer.toString(counter));
-          
+
+        kliky.setText("      " + Integer.toString(counter));
+
     }
-   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -75,6 +151,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         jLayeredPane1 = new javax.swing.JLayeredPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        Pravidla = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         buttonTwo = new javax.swing.JButton();
         buttonThree = new javax.swing.JButton();
@@ -120,28 +197,42 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
             }
         });
 
+        jPanel1.setBackground(new java.awt.Color(0, 255, 51));
         jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(0, 204, 255)));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 88)); // NOI18N
         jLabel1.setText("Patnáctka");
+
+        Pravidla.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        Pravidla.setText("Pravidla");
+        Pravidla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PravidlaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(667, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(624, 624, 624))
+                .addGap(327, 327, 327)
+                .addComponent(Pravidla, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(41, 41, 41))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Pravidla, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
+        jPanel2.setBackground(new java.awt.Color(51, 255, 51));
         jPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(0, 204, 204)));
 
         buttonTwo.setFont(new java.awt.Font("Tahoma", 1, 54)); // NOI18N
@@ -250,6 +341,8 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
 
         buttonFifteen.setFont(new java.awt.Font("Tahoma", 1, 54)); // NOI18N
         buttonFifteen.setText("15");
+        buttonFifteen.setPreferredSize(new java.awt.Dimension(101, 100));
+        buttonFifteen.setRequestFocusEnabled(false);
         buttonFifteen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonFifteenActionPerformed(evt);
@@ -293,8 +386,8 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(buttonFourteen, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(buttonFifteen, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(buttonFifteen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(6, 6, 6)
                                 .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -339,53 +432,60 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
                     .addComponent(buttonTen, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonTwelve, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonThirteen, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonFourteen, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonFifteen, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(buttonThirteen, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buttonFourteen, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buttonFifteen, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel3.setBackground(new java.awt.Color(51, 255, 51));
         jPanel3.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(0, 204, 204)));
+        jPanel3.setPreferredSize(new java.awt.Dimension(425, 383));
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 75)); // NOI18N
-        jLabel2.setText("Počet kliků");
-        jLabel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 255, 255)));
+        jLabel2.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 55)); // NOI18N
+        jLabel2.setText(" Počet kliků");
+        jLabel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         pocetKliku.setFont(new java.awt.Font("Tahoma", 1, 75)); // NOI18N
 
-        kliky.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 255, 255)));
+        kliky.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
+        kliky.setText("           ");
+        kliky.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(0, 34, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30))
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(144, 144, 144)
-                        .addComponent(pocetKliku))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(72, 72, 72)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(92, 92, 92)
-                        .addComponent(kliky, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(83, Short.MAX_VALUE))
+                .addGap(144, 144, 144)
+                .addComponent(pocetKliku)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(kliky, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(85, 85, 85))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(jLabel2)
-                .addGap(63, 63, 63)
+                .addGap(44, 44, 44)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
                 .addComponent(pocetKliku)
-                .addGap(18, 18, 18)
-                .addComponent(kliky, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(38, 38, 38)
+                .addComponent(kliky, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel4.setBackground(new java.awt.Color(51, 255, 51));
         jPanel4.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(0, 255, 255)));
 
         exit.setFont(new java.awt.Font("Tahoma", 1, 55)); // NOI18N
@@ -396,6 +496,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
             }
         });
 
+        reseni.setBackground(new java.awt.Color(255, 255, 255));
         reseni.setFont(new java.awt.Font("Tahoma", 1, 55)); // NOI18N
         reseni.setText("Řešení");
         reseni.addActionListener(new java.awt.event.ActionListener() {
@@ -404,6 +505,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
             }
         });
 
+        reset.setBackground(new java.awt.Color(204, 255, 204));
         reset.setFont(new java.awt.Font("Tahoma", 1, 55)); // NOI18N
         reset.setText("Reset");
         reset.addActionListener(new java.awt.event.ActionListener() {
@@ -416,31 +518,25 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(47, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(exit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(reset, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE))
-                .addGap(21, 21, 21))
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                    .addContainerGap(49, Short.MAX_VALUE)
-                    .addComponent(reseni, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(19, 19, 19)))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(reset, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(reseni, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(exit, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(174, Short.MAX_VALUE)
-                .addComponent(reset, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(60, 60, 60)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(reseni)
+                .addGap(46, 46, 46)
+                .addComponent(reset)
+                .addGap(46, 46, 46)
                 .addComponent(exit)
                 .addGap(65, 65, 65))
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGap(34, 34, 34)
-                    .addComponent(reseni, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(340, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -448,31 +544,28 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(786, Short.MAX_VALUE))
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -480,186 +573,211 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
 
     private void buttonTwoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTwoActionPerformed
         // TODO add your handling code here:
-        Empty(buttonTwo, buttonOne);
-        Empty(buttonTwo, buttonThree);
-        Empty(buttonTwo, buttonSix);
+        Move(buttonTwo, buttonOne);
+        Move(buttonTwo, buttonThree);
+        Move(buttonTwo, buttonSix);
         Solution();
+        counter++;
     }//GEN-LAST:event_buttonTwoActionPerformed
 
     private void buttonThreeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonThreeActionPerformed
         // TODO add your handling code here:
-        Empty(buttonThree, buttonTwo);
-        Empty(buttonThree, buttonSeven);
-        Empty(buttonThree, buttonFour);
+        Move(buttonThree, buttonTwo);
+        Move(buttonThree, buttonSeven);
+        Move(buttonThree, buttonFour);
         Solution();
+        counter++;
 
     }//GEN-LAST:event_buttonThreeActionPerformed
 
     private void buttonFourActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFourActionPerformed
         // TODO add your handling code here:
-        Empty(buttonFour, buttonThree);
-        Empty(buttonFour, buttonEight);
+        Move(buttonFour, buttonThree);
+        Move(buttonFour, buttonEight);
         Solution();
+        counter++;
 
     }//GEN-LAST:event_buttonFourActionPerformed
 
     private void buttonOneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOneActionPerformed
         // TODO add your handling code here:
-        Empty(buttonOne, buttonTwo);
-        Empty(buttonOne, buttonFive);
+        Move(buttonOne, buttonTwo);
+        Move(buttonOne, buttonFive);
         Solution();
+        counter++;
 
 
     }//GEN-LAST:event_buttonOneActionPerformed
 
     private void buttonFourteenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFourteenActionPerformed
         // TODO add your handling code here:
-        Empty(buttonFourteen, buttonTen);
-        Empty(buttonFourteen, buttonFifteen);
-        Empty(buttonFourteen, buttonThirteen);
+        Move(buttonFourteen, buttonTen);
+        Move(buttonFourteen, buttonFifteen);
+        Move(buttonFourteen, buttonThirteen);
         Solution();
+        counter++;
 
     }//GEN-LAST:event_buttonFourteenActionPerformed
 
     private void buttonEightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEightActionPerformed
         // TODO add your handling code here:
-        Empty(buttonEight, buttonFour);
-        Empty(buttonEight, buttonSeven);
-        Empty(buttonEight, buttonTwelve);
+        Move(buttonEight, buttonFour);
+        Move(buttonEight, buttonSeven);
+        Move(buttonEight, buttonTwelve);
         Solution();
+        counter++;
 
     }//GEN-LAST:event_buttonEightActionPerformed
 
     private void buttonFiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFiveActionPerformed
         // TODO add your handling code here:
-        Empty(buttonFive, buttonOne);
-        Empty(buttonFive, buttonSix);
-        Empty(buttonFive, buttonNine);
+        Move(buttonFive, buttonOne);
+        Move(buttonFive, buttonSix);
+        Move(buttonFive, buttonNine);
         Solution();
+        counter++;
 
     }//GEN-LAST:event_buttonFiveActionPerformed
 
     private void buttonSixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSixActionPerformed
         // TODO add your handling code here:
-        Empty(buttonSix, buttonSeven);
-        Empty(buttonSix, buttonFive);
-        Empty(buttonSix, buttonTwo);
-        Empty(buttonSix, buttonTen);
+        Move(buttonSix, buttonSeven);
+        Move(buttonSix, buttonFive);
+        Move(buttonSix, buttonTwo);
+        Move(buttonSix, buttonTen);
         Solution();
+        counter++;
 
     }//GEN-LAST:event_buttonSixActionPerformed
 
     private void buttonElevenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonElevenActionPerformed
         // TODO add your handling code here:
-        Empty(buttonEleven, buttonSeven);
-        Empty(buttonEleven, buttonFifteen);
-        Empty(buttonEleven, buttonTen);
-        Empty(buttonEleven, buttonTwelve);
+        Move(buttonEleven, buttonSeven);
+        Move(buttonEleven, buttonFifteen);
+        Move(buttonEleven, buttonTen);
+        Move(buttonEleven, buttonTwelve);
         Solution();
+        counter++;
 
     }//GEN-LAST:event_buttonElevenActionPerformed
 
     private void buttonSevenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSevenActionPerformed
         // TODO add your handling code here:
-        Empty(buttonSeven, buttonThree);
-        Empty(buttonSeven, buttonEleven);
-        Empty(buttonSeven, buttonSix);
-        Empty(buttonSeven, buttonEight);
+        Move(buttonSeven, buttonThree);
+        Move(buttonSeven, buttonEleven);
+        Move(buttonSeven, buttonSix);
+        Move(buttonSeven, buttonEight);
         Solution();
+        counter++;
 
     }//GEN-LAST:event_buttonSevenActionPerformed
 
     private void buttonThirteenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonThirteenActionPerformed
         // TODO add your handling code here:
-        Empty(buttonThirteen, buttonNine);
-        Empty(buttonThirteen, buttonFourteen);
+        Move(buttonThirteen, buttonNine);
+        Move(buttonThirteen, buttonFourteen);
         Solution();
+        counter++;
 
     }//GEN-LAST:event_buttonThirteenActionPerformed
 
     private void buttonTenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTenActionPerformed
         // TODO add your handling code here:
-        Empty(buttonTen, buttonSix);
-        Empty(buttonTen, buttonFourteen);
-        Empty(buttonTen, buttonNine);
-        Empty(buttonTen, buttonEleven);
+        Move(buttonTen, buttonSix);
+        Move(buttonTen, buttonFourteen);
+        Move(buttonTen, buttonNine);
+        Move(buttonTen, buttonEleven);
         Solution();
+        counter++;
 
     }//GEN-LAST:event_buttonTenActionPerformed
 
     private void buttonTwelveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTwelveActionPerformed
         // TODO add your handling code here:
-        Empty(buttonTwelve, buttonEight);
-        Empty(buttonTwelve, buttonEleven);
-        Empty(buttonTwelve, clearButton);
+        Move(buttonTwelve, buttonEight);
+        Move(buttonTwelve, buttonEleven);
+        Move(buttonTwelve, clearButton);
         Solution();
+        counter++;
 
     }//GEN-LAST:event_buttonTwelveActionPerformed
 
     private void buttonNineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNineActionPerformed
         // TODO add your handling code here:
-        Empty(buttonNine, buttonTen);
-        Empty(buttonNine, buttonFive);
-        Empty(buttonNine, buttonThirteen);
+        Move(buttonNine, buttonTen);
+        Move(buttonNine, buttonFive);
+        Move(buttonNine, buttonThirteen);
         Solution();
+        counter++;
 
     }//GEN-LAST:event_buttonNineActionPerformed
 
     private void buttonFifteenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFifteenActionPerformed
         // TODO add your handling code here:
-        Empty(buttonFifteen, buttonEleven);
-        Empty(buttonFifteen, buttonFourteen);
-        Empty(buttonFifteen, clearButton);
+        Move(buttonFifteen, buttonEleven);
+        Move(buttonFifteen, buttonFourteen);
+        Move(buttonFifteen, clearButton);
         Solution();
+        counter++;
 
     }//GEN-LAST:event_buttonFifteenActionPerformed
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
         // TODO add your handling code here:
-        Empty(clearButton, buttonTwelve);
-        Empty(clearButton, buttonFifteen);
+        Move(clearButton, buttonTwelve);
+        Move(clearButton, buttonFifteen);
+        counter++;
+        counter--;
         Solution();
 
     }//GEN-LAST:event_clearButtonActionPerformed
-public JFrame frame;
+    public JFrame frame;
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         // TODO add your handling code here:
         frame = new JFrame("Exit");
-        if (JOptionPane.showConfirmDialog(frame, "Chceš opustit ", "Patnáctku?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION){
+        if (JOptionPane.showConfirmDialog(frame, "Chceš opustit Patnáctku? ", "Patnáctka", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
             System.exit(0);
         }
-        
+
     }//GEN-LAST:event_exitActionPerformed
 
     private void reseniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reseniActionPerformed
         // TODO add your handling code here:
-            buttonOne.setText("1");
-            buttonTwo.setText("2");
-            buttonThree.setText("3");
-            buttonFour.setText("4");
-            buttonFive.setText("5");
-            buttonSix.setText("6");
-            buttonSeven.setText("7");
-            buttonEight.setText("8");
-            buttonNine.setText("9");
-            buttonTen.setText("10");
-            buttonEleven.setText("11");
-            buttonTwelve.setText("12");
-            buttonThirteen.setText("13");
-            buttonFourteen.setText("14");
-            buttonFifteen.setText("15");
-            clearButton.setText("");
-            counter = 0;
+        buttonOne.setText("1");
+        buttonTwo.setText("2");
+        buttonThree.setText("3");
+        buttonFour.setText("4");
+        buttonFive.setText("5");
+        buttonSix.setText("6");
+        buttonSeven.setText("7");
+        buttonEight.setText("8");
+        buttonNine.setText("9");
+        buttonTen.setText("10");
+        buttonEleven.setText("11");
+        buttonTwelve.setText("12");
+        buttonThirteen.setText("13");
+        buttonFourteen.setText("14");
+        buttonFifteen.setText("15");
+        clearButton.setText("");
+        counter = 0;
     }//GEN-LAST:event_reseniActionPerformed
 
     private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
         // TODO add your handling code here:
+        RandomShuffle();
         counter = 0;
     }//GEN-LAST:event_resetActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // TODO add your handling code here:
+        RandomShuffle();
     }//GEN-LAST:event_formWindowActivated
+    public JFrame frame1;
+    private void PravidlaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PravidlaActionPerformed
+        // TODO add your handling code here:
+        frame1 = new JFrame("Pravidla");
+        JOptionPane.showMessageDialog(frame, " Pravidla \n Vaším úkolem je seřadit čísla od 1 do 15. Docílíte toho postupnými záměnami některého čísla se sousedním políčkem");
+    }//GEN-LAST:event_PravidlaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -697,6 +815,7 @@ public JFrame frame;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Pravidla;
     private javax.swing.JButton buttonEight;
     private javax.swing.JButton buttonEleven;
     private javax.swing.JButton buttonFifteen;
