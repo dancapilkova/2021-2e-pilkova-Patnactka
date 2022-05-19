@@ -5,6 +5,8 @@
  */
 package rocnikovyprojekt2;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,42 +24,56 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
     public PatnactkaRocnikovka() {
         initComponents();
     }
-    int counter = 1;
+    int counter = 0;
 
     void Move(JButton button1, JButton button2) {
         String shuffle = button2.getText();
-        if (shuffle == "") {
+        if (shuffle.equals("0")) {
             button2.setText(button1.getText());
-            button1.setText("");
+            button1.setText("0");
             //metoda prohazuje mezi sebou tlačítka s čísly a volné tlačítko
         }
     }
 
     public void RandomShuffle() {
         int[][] puzzle = new int[4][4];
-        do {
-            Random rand = new Random();
-            int min = 0;
-            int max = 15;
-            int nCislo = rand.nextInt((max - min) + 1) + min;
-        } while (!isSolvable(puzzle));
-        buttonOne.setText(Integer.toString(puzzle[1][1]));
-        buttonTwo.setText(Integer.toString(puzzle[1][2]));
-        buttonThree.setText(Integer.toString(puzzle[1][3]));
-        buttonFour.setText(Integer.toString(puzzle[1][4]));
-        buttonFive.setText(Integer.toString(puzzle[2][1]));
-        buttonSix.setText(Integer.toString(puzzle[2][2]));
-        buttonSeven.setText(Integer.toString(puzzle[2][3]));
-        buttonEight.setText(Integer.toString(puzzle[2][4]));
-        buttonNine.setText(Integer.toString(puzzle[3][1]));
-        buttonTen.setText(Integer.toString(puzzle[3][2]));
-        buttonEleven.setText(Integer.toString(puzzle[3][3]));
-        buttonTwelve.setText(Integer.toString(puzzle[3][4]));
-        buttonThirteen.setText(Integer.toString(puzzle[4][1]));
-        buttonFourteen.setText(Integer.toString(puzzle[4][2]));
-        buttonFifteen.setText(Integer.toString(puzzle[4][3]));
-        clearButton.setText(Integer.toString(puzzle[4][4]));
+        ArrayList array = new ArrayList();
+        Random rand = new Random();
+        while (array.size() != 16) {
+            int cislo = rand.nextInt(16);
+            while (array.contains(cislo)) {
+                cislo = rand.nextInt(16);
+            }
+            array.add(cislo);
+        }
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                puzzle[i][j] = (int) array.get(i * 4 + j);
+            }
+        }
 
+        if (isSolvable(puzzle)) {
+          
+            buttonOne.setText(Integer.toString(puzzle[0][0]));
+            buttonTwo.setText(Integer.toString(puzzle[0][1]));
+            buttonThree.setText(Integer.toString(puzzle[0][2]));
+            buttonFour.setText(Integer.toString(puzzle[0][3]));
+            buttonFive.setText(Integer.toString(puzzle[1][0]));
+            buttonSix.setText(Integer.toString(puzzle[1][1]));
+            buttonSeven.setText(Integer.toString(puzzle[1][2]));
+            buttonEight.setText(Integer.toString(puzzle[1][3]));
+            buttonNine.setText(Integer.toString(puzzle[2][0]));
+            buttonTen.setText(Integer.toString(puzzle[2][1]));
+            buttonEleven.setText(Integer.toString(puzzle[2][2]));
+            buttonTwelve.setText(Integer.toString(puzzle[2][3]));
+            buttonThirteen.setText(Integer.toString(puzzle[3][0]));
+            buttonFourteen.setText(Integer.toString(puzzle[3][1]));
+            buttonFifteen.setText(Integer.toString(puzzle[3][2]));
+            clearButton.setText(Integer.toString(puzzle[3][3]));
+
+        }else{
+            RandomShuffle();
+        }
     }
 
     static int getInvCount(int[] arr) {
@@ -127,15 +143,14 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         String solution12 = buttonThirteen.getText();
         String solution13 = buttonFourteen.getText();
         String solution14 = buttonFifteen.getText();
+        String solution15 = clearButton.getText();
 
         if (solution == "1" && solution1 == "2" && solution2 == "3" && solution3 == "4" && solution4 == "5" && solution5 == "6" && solution6 == "7"
                 && solution7 == "8" && solution8 == "9" && solution9 == "10" && solution10 == "11" && solution11 == "12" && solution12 == "13"
-                && solution13 == "14" && solution14 == "15") {
+                && solution13 == "14" && solution14 == "15" && solution15 == "0") {
             JOptionPane.showMessageDialog(this, "Vyhrál jsi!", "Patnáctka", JOptionPane.INFORMATION_MESSAGE);
 
         }
-
-        kliky.setText("      " + Integer.toString(counter));
 
     }
 
@@ -350,6 +365,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         });
 
         clearButton.setFont(new java.awt.Font("Tahoma", 1, 54)); // NOI18N
+        clearButton.setText("0");
         clearButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearButtonActionPerformed(evt);
@@ -578,6 +594,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonTwo, buttonSix);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
     }//GEN-LAST:event_buttonTwoActionPerformed
 
     private void buttonThreeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonThreeActionPerformed
@@ -587,6 +604,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonThree, buttonFour);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
 
     }//GEN-LAST:event_buttonThreeActionPerformed
 
@@ -596,6 +614,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonFour, buttonEight);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
 
     }//GEN-LAST:event_buttonFourActionPerformed
 
@@ -605,6 +624,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonOne, buttonFive);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
 
 
     }//GEN-LAST:event_buttonOneActionPerformed
@@ -616,7 +636,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonFourteen, buttonThirteen);
         Solution();
         counter++;
-
+        kliky.setText("      " + Integer.toString(counter));
     }//GEN-LAST:event_buttonFourteenActionPerformed
 
     private void buttonEightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEightActionPerformed
@@ -626,6 +646,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonEight, buttonTwelve);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
 
     }//GEN-LAST:event_buttonEightActionPerformed
 
@@ -636,6 +657,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonFive, buttonNine);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
 
     }//GEN-LAST:event_buttonFiveActionPerformed
 
@@ -647,6 +669,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonSix, buttonTen);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
 
     }//GEN-LAST:event_buttonSixActionPerformed
 
@@ -658,6 +681,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonEleven, buttonTwelve);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
 
     }//GEN-LAST:event_buttonElevenActionPerformed
 
@@ -669,6 +693,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonSeven, buttonEight);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
 
     }//GEN-LAST:event_buttonSevenActionPerformed
 
@@ -678,6 +703,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonThirteen, buttonFourteen);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
 
     }//GEN-LAST:event_buttonThirteenActionPerformed
 
@@ -689,6 +715,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonTen, buttonEleven);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
 
     }//GEN-LAST:event_buttonTenActionPerformed
 
@@ -699,6 +726,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonTwelve, clearButton);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
 
     }//GEN-LAST:event_buttonTwelveActionPerformed
 
@@ -709,6 +737,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonNine, buttonThirteen);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
 
     }//GEN-LAST:event_buttonNineActionPerformed
 
@@ -719,6 +748,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(buttonFifteen, clearButton);
         Solution();
         counter++;
+        kliky.setText("      " + Integer.toString(counter));
 
     }//GEN-LAST:event_buttonFifteenActionPerformed
 
@@ -727,8 +757,8 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         Move(clearButton, buttonTwelve);
         Move(clearButton, buttonFifteen);
         counter++;
-        counter--;
         Solution();
+        kliky.setText("      " + Integer.toString(counter));
 
     }//GEN-LAST:event_clearButtonActionPerformed
     public JFrame frame;
@@ -758,7 +788,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
         buttonThirteen.setText("13");
         buttonFourteen.setText("14");
         buttonFifteen.setText("15");
-        clearButton.setText("");
+        clearButton.setText("0");
         counter = 0;
     }//GEN-LAST:event_reseniActionPerformed
 
@@ -771,6 +801,7 @@ public class PatnactkaRocnikovka extends javax.swing.JFrame {
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // TODO add your handling code here:
         RandomShuffle();
+        counter = 0;
     }//GEN-LAST:event_formWindowActivated
     public JFrame frame1;
     private void PravidlaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PravidlaActionPerformed
